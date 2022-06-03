@@ -12,8 +12,8 @@ const token = "61fa113f-d206-4a9b-8d68-5a4a8f0fd79f"; // put a valid token here
 
 // Set up the options for the call
 const options = {
-    crs:"ASN",
-    filterList: ["KGX"],
+    crs:"NUM",
+    filterList: ["MUF"],
     timeWindow:120,
     timeOffset: 0
 };
