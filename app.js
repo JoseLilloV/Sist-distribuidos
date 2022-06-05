@@ -13,16 +13,43 @@ const token = "61fa113f-d206-4a9b-8d68-5a4a8f0fd79f"; // put a valid token here
 // Set up the options for the call
 const options = {
     crs:"NUM",
-    filterList: ["MUF"],
-    timeWindow:120,
+    filterList: ["MUF", "LIV", "WCX", "HFE"],
+    timeWindow: 120,
     timeOffset: 0
 };
 
+const optionsGetDepartureBoard = {
+    crs: "LST",
+    numRows: 10,
+    timeWindow: 5,
+    timeOffset: 0
+    //filterCrs: "WCX",
+    //filterType: "to"
+
+}
+
+let depBoard = Array();
+
 const api = new LiveDepartureBoardService(token, false);
-api.call("GetNextDepartures", options)
+// api.call("GetFastestDepartures", options)
+//     .then(board => {
+//         console.log(board);
+//         console.log(board['DeparturesBoard']['departures']["destination"]);
+//     })
+//     .catch(error => console.error(error));
+
+api.call("GetDepartureBoard", optionsGetDepartureBoard)
     .then(board => {
-        console.log(board);
-        console.log(board['DeparturesBoard']['departures']);
+        //console.log(board.GetStationBoardResult.trainServices);
+        for (let i of board.GetStationBoardResult.trainServices.service){
+            depBoard.push(i);
+        }
+        for (let i of depBoard){
+            console.log(i);
+            console.log("origen: ", i.origin.location.locationName);
+            console.log("destino: ", i.destination.location.locationName);
+        }
+        
     })
     .catch(error => console.error(error));
 
