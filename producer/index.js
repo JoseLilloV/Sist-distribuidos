@@ -17,8 +17,8 @@ const options = {
 
 const optionsGetDepartureBoard = {
     crs: "LST",
-    numRows: 10,
-    timeWindow: 5,
+    numRows: 20,
+    timeWindow: 10,
     timeOffset: 0
     //filterCrs: "WCX",
     //filterType: "to"
@@ -38,28 +38,22 @@ const api = new LiveDepartureBoardService(token, false);
 api.call("GetDepartureBoard", optionsGetDepartureBoard)
     .then(board => {
         console.log(board);
-        console.log(Object.keys(board.GetStationBoardResult));
         if (Object.keys(board.GetStationBoardResult).includes("trainServices")){
-            for (let i of board.GetStationBoardResult.trainServices.service){
-                depBoard.push(i);
-                producer.send([{topic:"LST", messages: JSON.stringify(i)}], 
-                                function (err, data){});
-            }
+            producer.send([{topic:"LST", messages: JSON.stringify(board.GetStationBoardResult)}], 
+                            function (err, data){});
+            console.log(board.GetStationBoardResult);
+            console.log(board.GetStationBoardResult.trainServices.service);
+            
         }
         else{
             console.log("No hay trenes");
         }
-        producer.send([{topic:"LST", messages: JSON.stringify(board.GetStationBoardResult)}], 
-                                function (err, data){});
         
         
         
     })
     .catch(error => console.error(error));
-
-
-
-
+    
     // setInterval(function(){
     //     producer.send([{topic:"test2", messages: "Hola"}], function (err, data){});
     // }, 5000);

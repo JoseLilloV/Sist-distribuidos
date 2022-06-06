@@ -7,9 +7,10 @@ const client = new kafka.KafkaClient({kafkaHost: "127.0.0.1:9092"});
 
 var consumer = new kafka.Consumer(client, [{topic: "LST"}]);
 
-consumer.on("message", function (message){
+consumer.on("message", async function (message){
     console.log(message);
-    let result = service.create2(message);
-    console.log(result);
+    let parsedMessage = JSON.parse(message.value);
+        const response = await service.createDepartures(parsedMessage.locationName, parsedMessage.crs, parsedMessage.trainServices.service).catch((err) => console.log("error"));
+        console.log(response);
 });
 
