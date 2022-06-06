@@ -37,12 +37,21 @@ const api = new LiveDepartureBoardService(token, false);
 
 api.call("GetDepartureBoard", optionsGetDepartureBoard)
     .then(board => {
-        //console.log(board.GetStationBoardResult.trainServices);
-        for (let i of board.GetStationBoardResult.trainServices.service){
-            depBoard.push(i);
-            producer.send([{topic:"LST", messages: JSON.stringify(i)}], 
-                            function (err, data){});
+        console.log(board);
+        console.log(Object.keys(board.GetStationBoardResult));
+        if (Object.keys(board.GetStationBoardResult).includes("trainServices")){
+            for (let i of board.GetStationBoardResult.trainServices.service){
+                depBoard.push(i);
+                producer.send([{topic:"LST", messages: JSON.stringify(i)}], 
+                                function (err, data){});
+            }
         }
+        else{
+            console.log("No hay trenes");
+        }
+        producer.send([{topic:"LST", messages: JSON.stringify(board.GetStationBoardResult)}], 
+                                function (err, data){});
+        
         
         
     })
