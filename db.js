@@ -1,5 +1,13 @@
 const { Pool } = require('pg');
-const config = require('./config');
+const config = {
+  db: { 
+    host:  'localhost',
+    port:   '5432',
+    user:  'postgres',
+    password: 'postgres',
+    database: 'LDBWS',
+  },
+};
 const pool = new Pool(config.db);
 
 async function query(query, params) {
@@ -8,5 +16,5 @@ async function query(query, params) {
 }
 
 module.exports = {
-  query
+  pool
 }

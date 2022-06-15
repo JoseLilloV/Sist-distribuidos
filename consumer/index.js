@@ -10,7 +10,8 @@ var consumer = new kafka.Consumer(client, [{topic: "LST"}]);
 consumer.on("message", async function (message){
     console.log(message);
     let parsedMessage = JSON.parse(message.value);
-        const response = await service.createDepartures(parsedMessage.locationName, parsedMessage.crs, parsedMessage.trainServices.service).catch((err) => console.log("error"));
-        console.log(response);
+        await service.createDepartures(parsedMessage.generatedAt, 
+            parsedMessage.locationName, parsedMessage.crs, 
+            parsedMessage.trainServices.service);
 });
 
