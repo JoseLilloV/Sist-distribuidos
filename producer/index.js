@@ -18,7 +18,7 @@ const options = {
 const optionsGetDepartureBoard = {
     crs: "LST",
     numRows: 100,
-    timeWindow: 30,
+    timeWindow: 4,
     timeOffset: 0
     //filterCrs: "WCX",
     //filterType: "to"
@@ -28,6 +28,21 @@ const optionsGetDepartureBoard = {
 const api = new LiveDepartureBoardService(token, false);
 
 producer.on("ready", function(){
+    api.call("GetDepartureBoard", optionsGetDepartureBoard)
+        .then(board => {
+            console.log(board);
+            if (Object.keys(board.GetStationBoardResult).includes("trainServices")){
+                producer.send([{topic:optionsGetDepartureBoard.crs, messages: JSON.stringify(board.GetStationBoardResult)}], 
+                                function (err, data){});
+                console.log(board.GetStationBoardResult.trainServices.service);
+                
+            }
+            else{
+                console.log("No hay trenes");
+            }    
+        })
+        .catch(error => console.error("Error api ", error));
+
     setInterval(function(){
         api.call("GetDepartureBoard", optionsGetDepartureBoard)
         .then(board => {
@@ -42,8 +57,8 @@ producer.on("ready", function(){
                 console.log("No hay trenes");
             }    
         })
-        .catch(error => console.error(error));
-    }, 3000);
+        .catch(error => console.error("Error api ", error));
+    }, 300000);
 });
     
 

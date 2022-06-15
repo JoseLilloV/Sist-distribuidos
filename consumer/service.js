@@ -11,24 +11,28 @@ async function createDepartures(generatedAt, locationName, crs, trains){
         let time = generatedAt.split("T")[1].split(".")[0];
         if(Object.prototype.toString.call(trains) === '[object Array]') {
             for (const train of trains){
-                let values = [date, time, locationName, crs, train.origin.location.crs, train.destination.location.crs, train.origin.location.locationName, train.destination.location.locationName, train.std, train.etd];
-                console.log(values);
-                await db.pool.query(query, values);
+                let values = [date, time, locationName, crs, train.origin.location.crs, 
+                    train.destination.location.crs, train.origin.location.locationName, 
+                    train.destination.location.locationName, train.std, train.etd];
+                await db.pool.query(query, values).then(res => console.log(res.rows));
             }
         }
         else{
-            let values = [date, time, locationName, crs, trains.origin.location.crs, trains.destination.location.crs, trains.origin.location.locationName, trains.destination.location.locationName, trains.std, trains.etd];
+            let values = [date, time, locationName, crs, trains.origin.location.crs, 
+                trains.destination.location.crs, trains.origin.location.locationName, 
+                trains.destination.location.locationName, trains.std, trains.etd];
            await db.pool.query(query, values);
 
         }
+        
     } 
     catch (e) {
         await db.pool.query("ROLLBACK");
-        console.log("error");
+        console.log("Error consumer service");
         throw e;
     } 
     finally {
-        db.pool.release();
+        console.log("Consumer service done")
     }
        
 }
