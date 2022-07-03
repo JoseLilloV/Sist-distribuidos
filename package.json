@@ -16,5 +16,8 @@
     "kafka-node": "^5.0.0",
     "ldbs-json": "^1.2.1",
     "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "vue-cli-plugin-vuetify": "~2.5.1"
   }
 }

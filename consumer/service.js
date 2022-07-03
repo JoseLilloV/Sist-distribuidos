@@ -37,4 +37,57 @@ async function createDepartures(generatedAt, locationName, crs, trains){
        
 }
 
-module.exports={createDepartures};
+async function getDeparturesByDay(){
+    await db.pool.connect();
+    try {
+        let query = 'SELECT * FROM departures WHERE date = $1';
+        const fecha = new Date();
+        let date = "2022-06-13"
+        //let date = str(fecha.getFullYear())+ '-' + str( fecha.getMonth() + 1) + '-' + str(fecha.getDate()-1);
+        data = await db.pool.query(query, [date])
+        return data.rows;
+    } 
+    catch (e) {
+        console.log("Error al consultar por los trenes del dia: ", new Date());
+        throw e;
+    } 
+       
+}
+
+async function createMetrics(listOfDepartures){
+    await db.pool.connect();
+    try {        
+        let insert_query = 'INSERT metrics (date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf )  VALUES ($1, $2, $3, $3, $4) RETURNING *';
+        let update_query = 'UPDATE metrics SET percentage_ontime = $2, quantity_train_to_pad = $3, quantity_train_to_abw = $4, quantity_train_to_snf = $5 WHERE date = $1;'
+        let percentage_ontime = 0
+        let quantity_train_to_pad = 0
+        let quantity_train_to_abw = 0
+        let quantity_train_to_snf = 0
+        let date = listOfDepartures[0].date
+        for (let index = 0; index < listOfDepartures.length; index++) {
+            if (listOfDepartures[index].etd == "On time")
+                percentage_ontime = percentage_ontime + 1
+            switch (listOfDepartures[0].crs_destination) {
+                case 'PAD':
+                    quantity_train_to_pad = quantity_train_to_pad + 1
+                    break;
+                case 'ABW':
+                    quantity_train_to_abw = quantity_train_to_abw + 1
+                    break
+                case 'SNF':
+                    quantity_train_to_snf = quantity_train_to_snf + 1
+                    break
+            }
+        }
+        percentage_ontime = percentage_ontime/listOfDepartures.length * 100
+        data = await db.pool.query(insert_query, [date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf])
+        return data;
+    } 
+    catch (e) {
+        console.log("Error al consultar por los trenes del dia: ", date);
+        throw e;
+    } 
+
+}
+
+module.exports={createDepartures, getDeparturesByDay, createMetrics };
