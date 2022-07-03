@@ -1,0 +1,6 @@
+FROM node:9-slim
+WORKDIR /producer
+COPY /package.json /producer
+RUN npm install
+COPY . /producer
+CMD ["npm", "run", "start:producer"]

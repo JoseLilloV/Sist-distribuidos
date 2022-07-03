@@ -1,0 +1,6 @@
+FROM node:9-slim
+WORKDIR /consumer
+COPY /package.json /consumer
+RUN npm install
+COPY . /consumer
+CMD ["npm", "run", "start:consumer"]

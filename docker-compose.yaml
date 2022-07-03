@@ -19,3 +19,28 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+
+  kafka-consumer:
+    container_name: kafka-consumer
+    build:
+      context: ./
+      dockerfile: Dockerfile-consumer
+    ports:
+      - 3001:3001
+    restart: "always"
+    depends_on:
+      - zookeeper
+      - kafka
+      - kafka-producer
+
+  kafka-producer:
+    container_name: kafka-producer
+    build:
+      context: ./
+      dockerfile: Dockerfile-producer
+    ports:
+      - 3000:3000
+    restart: "always"
+    depends_on:
+      - zookeeper
+      - kafka
