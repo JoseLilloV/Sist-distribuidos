@@ -17,7 +17,7 @@ const client = new kafka.KafkaClient({kafkaHost: "127.0.0.1:9092"});
 var consumer = new kafka.Consumer(client, [{topic: "LST"}]);
 
 const fecha = new Date();
-var date = str(fecha.getFullYear())+ '-' + str( fecha.getMonth() + 1) + '-' + str(fecha.getDate());
+var date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate());
 
 consumer.on("message", async function (message){
     console.log(message);
@@ -25,7 +25,7 @@ consumer.on("message", async function (message){
         await service.createDepartures(parsedMessage.generatedAt, 
             parsedMessage.locationName, parsedMessage.crs, 
             parsedMessage.trainServices.service);
-    let date_now = str(fecha.getFullYear())+ '-' + str( fecha.getMonth() + 1) + '-' + str(fecha.getDate());
+    let date_now = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate());
     if ( date != date_now){
         const result = await service.getDeparturesByDay();
         await service.createMetrics(result);

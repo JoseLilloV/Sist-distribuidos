@@ -42,8 +42,8 @@ async function getDeparturesByDay(){
     try {
         let query = 'SELECT * FROM departures WHERE date = $1';
         const fecha = new Date();
-        let date = "2022-06-13"
-        //let date = str(fecha.getFullYear())+ '-' + str( fecha.getMonth() + 1) + '-' + str(fecha.getDate()-1);
+        //let date = "2022-06-13"
+        let date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate()-1);
         data = await db.pool.query(query, [date])
         return data.rows;
     } 
