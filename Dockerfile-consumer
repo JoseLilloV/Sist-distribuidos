@@ -1,6 +1,6 @@
-FROM node:9-slim
-WORKDIR /consumer
-COPY /package.json /consumer
+FROM node:12-alpine
+WORKDIR /app
+COPY /package.json /app
 RUN npm install
-COPY . /consumer
+COPY . /app
 CMD ["npm", "run", "start:consumer"]

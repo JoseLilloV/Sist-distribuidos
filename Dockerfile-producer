@@ -1,6 +1,6 @@
-FROM node:9-slim
-WORKDIR /producer
-COPY /package.json /producer
+FROM node:12-alpine
+WORKDIR /app
+COPY /package.json /app
 RUN npm install
-COPY . /producer
+COPY . /app
 CMD ["npm", "run", "start:producer"]

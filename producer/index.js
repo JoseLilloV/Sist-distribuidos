@@ -1,10 +1,11 @@
-console.log("producer..");
 const kafka = require("kafka-node");
 const useStaffVersion = false;
 const LiveDepartureBoardService = require('ldbs-json');
 const token = "61fa113f-d206-4a9b-8d68-5a4a8f0fd79f";
 
-const client = new kafka.KafkaClient({kafkaHost: "127.0.0.1:9092"});
+const client = new kafka.KafkaClient({
+    kafkaHost: process.env.INTERNAL_KAFKA_ADDR
+});
 
 var producer = new kafka.Producer(client);
 
@@ -26,6 +27,7 @@ const optionsGetDepartureBoard = {
 }
 
 const api = new LiveDepartureBoardService(token, false);
+console.log("PRODUCER UP");
 
 producer.on("ready", function(){
     api.call("GetDepartureBoard", optionsGetDepartureBoard)

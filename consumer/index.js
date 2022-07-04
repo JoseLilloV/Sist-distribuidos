@@ -1,6 +1,4 @@
 const service = require("./service");
-
-console.log("consumer..");
 const kafka = require("kafka-node");
 /*
 const start_get = async function(a, b) {
@@ -12,13 +10,17 @@ const start_get = async function(a, b) {
 start();
 */
 
-const client = new kafka.KafkaClient({kafkaHost: "127.0.0.1:9092"});
+
+
+const client = new kafka.KafkaClient({
+    kafkaHost: process.env.INTERNAL_KAFKA_ADDR
+});
 
 var consumer = new kafka.Consumer(client, [{topic: "LST"}]);
 
 const fecha = new Date();
 var date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate());
-
+console.log("CONSUMER UP");
 consumer.on("message", async function (message){
     console.log(message);
     let parsedMessage = JSON.parse(message.value);
