@@ -20,7 +20,7 @@ var consumer = new kafka.Consumer(client, [{topic: "LST"}]);
 
 const fecha = new Date();
 var date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate());
-console.log("CONSUMER UP");
+console.log("CONSUMER UP ", process.env.DB_ADDR, process.env.INTERNAL_KAFKA_ADDR);
 consumer.on("message", async function (message){
     console.log(message);
     let parsedMessage = JSON.parse(message.value);

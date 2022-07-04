@@ -29,6 +29,17 @@ services:
     depends_on:
       - zookeeper
 
+  database:
+    container_name: database
+    networks:
+      - broker-kafka
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    ports:
+      - 5432:5432
+    restart: "always"
+
   kafka-consumer:
     container_name: kafka-consumer
     networks:
@@ -41,10 +52,12 @@ services:
     restart: "always"
     environment:
       INTERNAL_KAFKA_ADDR: kafka:29092
+      DB_ADDR: database
     depends_on:
       - zookeeper
       - kafka
       - kafka-producer
+      - database
 
   kafka-producer:
     container_name: kafka-producer
@@ -61,6 +74,8 @@ services:
     depends_on:
       - zookeeper
       - kafka
+      - database
+    
 
 networks:
   broker-kafka:
