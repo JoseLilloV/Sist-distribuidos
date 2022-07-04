@@ -57,8 +57,8 @@ async function getDeparturesByDay(){
 async function createMetrics(listOfDepartures){
     await db.pool.connect();
     try {        
-        let insert_query = 'INSERT metrics (date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf )  VALUES ($1, $2, $3, $3, $4) RETURNING *';
-        let update_query = 'UPDATE metrics SET percentage_ontime = $2, quantity_train_to_pad = $3, quantity_train_to_abw = $4, quantity_train_to_snf = $5 WHERE date = $1;'
+        let insert_query = 'INSERT metric (date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf )  VALUES ($1, $2, $3, $3, $4) RETURNING *';
+        let update_query = 'UPDATE metric SET percentage_ontime = $2, quantity_train_to_pad = $3, quantity_train_to_abw = $4, quantity_train_to_snf = $5 WHERE date = $1;'
         let percentage_ontime = 0
         let quantity_train_to_pad = 0
         let quantity_train_to_abw = 0

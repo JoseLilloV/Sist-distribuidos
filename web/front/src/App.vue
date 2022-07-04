@@ -1,60 +1,105 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <HelloWorld/>
-    </v-main>
-  </v-app>
+    <div id="app">
+        <v-row align="start">
+            <v-col class="mx-16 mt-9" width=100>
+                {{listaBD}}
+                <v-select    width=100
+                    outlined
+                    :items="listaBD"
+                    label="Base de datos"
+                    v-model="baseDatos" 
+                ></v-select>
+                <v-btn
+                    dark
+                    color="#0d0db1"
+                    width="200"
+                    height="30"
+                    type="button"
+                    class="btn btn-info action_btn" 
+                    v-on:click="actualizarTablas();"
+                >
+                Actualizar
+                </v-btn>
+                <br/>
+                <br/>
+                <NavApp/>
+            </v-col>
+            <v-col>
+                <TableMetric :list="listMetric"/> <br/>
+                <TableDeparture :list="listDeparture"/> <br/>
+                <TableData :list="listData"/> <br/>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import TableMetric from './components/TableMetric.vue'
+import NavApp from './components/NavApps.vue'
+import TableDeparture from './components/TableDeparture.vue'
+import TableData from './components/TableData.vue'
+import DataService from './service/service'
 
 export default {
-  name: 'App',
+name: 'App',
+components: {
+    TableMetric,
+    NavApp,
+    TableDeparture,
+    TableData
+},
+  
+data: () =>({
+    listaBD:['LDBWS', 'LDBWS-replica', 123],
+    baseDatos:'LDBWS',
+    listMetric:[],
+    listDeparture:[],
+    listData:[],
+}), 
 
-  components: {
-    HelloWorld,
-  },
+    methods:{
+        actualizarTablas(){
+            DataService.getAllData()
+            .then(response => {
+                this.listData = response.data;
+            })
+            .catch(e =>{
+                console.log(e)
+            });
+            DataService.getAllMetric()
+            .then(response => {
+                this.listMetric = response.data;
+            })
+            .catch(e =>{
+                console.log(e)
+            });
+            DataService.getAllDepartures()
+            .then(response => {
+                this.listDeparture = response.data;
+            })
+            .catch(e =>{
+                console.log(e)
+            });
 
-  data: () => ({
-    //
-  }),
-};
+        }
+    },
+    created(){
+        this.actualizarTablas()
+    },
+    mounted() {
+        this.actualizarTablas()
+    },
+
+}
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>

@@ -6,7 +6,7 @@ const config = {
       port:   '5432',
       user:  'postgres',
       password: 'postgres',
-      database: 'LDBWS',
+      database: 'LDBWS2',
     },
   };
   
