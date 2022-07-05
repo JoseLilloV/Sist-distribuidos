@@ -4,7 +4,7 @@ var async = require('async');
 
 
 async function createDepartures(generatedAt, locationName, crs, trains){
-    await db.pool.connect();
+    
     try {
         let query = 'INSERT INTO departures(date, time, location_name, crs, crs_origin, crs_destination, origin, destination, std, etd) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
         let date = generatedAt.split("T")[0];
@@ -14,15 +14,16 @@ async function createDepartures(generatedAt, locationName, crs, trains){
                 let values = [date, time, locationName, crs, train.origin.location.crs, 
                     train.destination.location.crs, train.origin.location.locationName, 
                     train.destination.location.locationName, train.std, train.etd];
-                await db.pool.query(query, values).then(res => console.log(res.rows));
+                let client = await db.pool.connect();
+                await client.query(query, values).then(res => {console.log(res.rows);client.release()});
             }
         }
         else{
             let values = [date, time, locationName, crs, trains.origin.location.crs, 
                 trains.destination.location.crs, trains.origin.location.locationName, 
                 trains.destination.location.locationName, trains.std, trains.etd];
-           await db.pool.query(query, values);
-
+           let client = await db.pool.connect();
+           await client.query(query, values).then(res => {console.log(res.rows);client.release()});
         }
         
     } 
