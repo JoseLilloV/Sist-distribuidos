@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+
+  back-web:
+    container_name: back-web
+    build:
+      context: .
+      dockerfile: docker-back
+    ports:
+      - 5000:5000
+    restart: "always"
+
+  front-web:
+    container_name: front-web
+    build:
+      context: .
+      dockerfile: docker-front
+    ports:
+      - 8080:80
+  redis:
+    image: redis

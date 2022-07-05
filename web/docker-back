@@ -1,0 +1,10 @@
+FROM node:12.18.1-alpine
+
+WORKDIR /app
+COPY ./back/package*.json ./
+RUN npm install
+COPY  ./back .
+EXPOSE 5000
+CMD [ "npm", "start" ]
+
+
