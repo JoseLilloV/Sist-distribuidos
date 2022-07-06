@@ -46,7 +46,7 @@ async function getDeparturesByDay(){
         //let date = "2022-06-13"
         let date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate()-1);
         let client = await db.pool.connect();
-        await client.query(query, [date]).then(res => {console.log(res.rows);client.release()});
+        await client.query(query, [date]).then(res => {client.release();return res.rows;});
     } 
     catch (e) {
         console.log("Error al consultar por los trenes del dia: ", new Date());
@@ -82,7 +82,7 @@ async function createMetrics(listOfDepartures){
         percentage_ontime = percentage_ontime/listOfDepartures.length * 100;
         let client = await db.pool.connect();
         await client.query(insert_query, [date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf])
-            .then(res => {console.log(res.rows);client.release()});
+            .then(res => {client.release();return res;});
     } 
     catch (e) {
         console.log("Error al consultar por los trenes del dia: ", date);
