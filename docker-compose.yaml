@@ -37,7 +37,7 @@ services:
       context: .
       dockerfile: Dockerfile-postgres
     ports:
-      - 5432:5432
+      - 8000:5432
     restart: "always"
 
   kafka-consumer:
@@ -75,7 +75,31 @@ services:
       - zookeeper
       - kafka
       - database
-    
+  
+  back-web:
+    container_name: back-web
+    networks:
+      - broker-kafka
+    build:
+      context: ./web
+      dockerfile: docker-back
+    environment:
+      DB_ADDR: database
+    ports:
+      - 5000:5000
+    restart: "always"
+
+  front-web:
+    container_name: front-web
+    networks:
+      - broker-kafka
+    build:
+      context: ./web
+      dockerfile: docker-front
+    ports:
+      - 8080:80
+  redis:
+    image: redis
 
 networks:
   broker-kafka:
