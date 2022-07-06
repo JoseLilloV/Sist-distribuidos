@@ -13,7 +13,7 @@
             <v-card-text>
                 <v-row align="center" justify="center" class="mx-auto">
                     <v-col><strong>Dia</strong></v-col>
-                    <v-col><strong>Promedio trenes a tiempo</strong></v-col>
+                    <v-col><strong>Porcentaje trenes a tiempo</strong></v-col>
                     <v-col><strong>Cantidad de trenes a PAD</strong></v-col>
                     <v-col><strong>Cantidad de trenes a ANW</strong></v-col>
                     <v-col><strong>Cantidad de trenes a SNF</strong></v-col>

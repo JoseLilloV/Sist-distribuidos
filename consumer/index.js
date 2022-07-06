@@ -27,6 +27,7 @@ consumer.on("message", async function (message){
         await service.createDepartures(parsedMessage.generatedAt, 
             parsedMessage.locationName, parsedMessage.crs, 
             parsedMessage.trainServices.service);
+        await service.createDataRaw(parsedMessage);
     let date_now = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate());
     if ( date != date_now){
         const result = await service.getDeparturesByDay();

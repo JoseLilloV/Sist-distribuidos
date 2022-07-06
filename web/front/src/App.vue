@@ -2,7 +2,6 @@
     <div id="app">
         <v-row align="start">
             <v-col class="mx-16 mt-9" width=100>
-                {{listaBD}}
                 <v-select    width=100
                     outlined
                     :items="listaBD"

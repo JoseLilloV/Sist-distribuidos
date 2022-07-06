@@ -57,7 +57,7 @@ async function getDeparturesByDay(){
 
 async function createMetrics(listOfDepartures){
     try {        
-        let insert_query = 'INSERT metric (date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf )  VALUES ($1, $2, $3, $3, $4) RETURNING *';
+        let insert_query = 'INSERT INTO metric (date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf )  VALUES ($1, $2, $3, $4, $5) RETURNING *';
         let update_query = 'UPDATE metric SET percentage_ontime = $2, quantity_train_to_pad = $3, quantity_train_to_abw = $4, quantity_train_to_snf = $5 WHERE date = $1;'
         let percentage_ontime = 0
         let quantity_train_to_pad = 0
@@ -91,4 +91,22 @@ async function createMetrics(listOfDepartures){
 
 }
 
-module.exports={createDepartures, getDeparturesByDay, createMetrics };
+async function createDataRaw(values){
+    
+    try {
+        let query = 'INSERT INTO data(value) VALUES ($1) RETURNING *';
+        let client = await db.pool.connect();
+        await client.query(query, values).then(res => {console.log(res.rows);client.release()});
+    } 
+    catch (e) {
+        await db.pool.query("ROLLBACK");
+        console.log("Error consumer service");
+        throw e;
+    } 
+    finally {
+        console.log("Consumer service done")
+    }
+       
+}
+
+module.exports={createDepartures, getDeparturesByDay, createMetrics, createDataRaw };
