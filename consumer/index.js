@@ -39,7 +39,6 @@ consumer.on("message", async function (message){
         await service.createDepartures(parsedMessage.generatedAt, 
             parsedMessage.locationName, parsedMessage.crs, 
             parsedMessage.trainServices.service);
-        await service.createDataRaw(parsedMessage);
 
     let month_now = fecha.getMonth() + 1;
     let day_now = fecha.getDate();
