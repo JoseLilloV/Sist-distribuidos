@@ -10,15 +10,15 @@
                 <v-title>About Us</v-title>
                 <v-spacer/>
             </v-app-bar>  
-            Integrates: <br/>
+            Integrantes: <br/>
             - Arturo Cadenas <br/>
             - Jose Lillo <br/>
             - Cristóbal Vásquez <br/> <br/>
 
-            Este proyecto tiene como objetivo desarrollar un sistema distribuidos 
+            Este proyecto tiene como objetivo desarrollar un sistema distribuido 
             para consumir los datos que dispone la National Rail Enquiries en su
-            API publica sobre las estaciones de trenes de Londres, en particular
-            aqui analizamos la estación de London Liverpool (LTS)
+            API pública sobre las estaciones de trenes de Londres, en particular
+            aqui analizamos la estación de London Liverpool (LST)
         </v-card>
     </div>
 </template>
