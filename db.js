@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 const config = {
   db: { 
-    host:  'localhost',
-    port:   '8000',
+    host:  process.env.DB_ADDR,
+    port:   '5432',
     user:  'postgres',
     password: 'postgres',
     database: 'LDBWS2',
