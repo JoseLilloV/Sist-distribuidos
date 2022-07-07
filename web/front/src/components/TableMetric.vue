@@ -15,7 +15,7 @@
                     <v-col><strong>Dia</strong></v-col>
                     <v-col><strong>Porcentaje trenes a tiempo</strong></v-col>
                     <v-col><strong>Cantidad de trenes a PAD</strong></v-col>
-                    <v-col><strong>Cantidad de trenes a ANW</strong></v-col>
+                    <v-col><strong>Cantidad de trenes a ABW</strong></v-col>
                     <v-col><strong>Cantidad de trenes a SNF</strong></v-col>
                 </v-row>
             </v-card-text>
