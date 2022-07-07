@@ -38,15 +38,14 @@ async function createDepartures(generatedAt, locationName, crs, trains){
        
 }
 
-async function getDeparturesByDay(){
+async function getDeparturesByDay(date){
   
     try {
         let query = 'SELECT * FROM departures WHERE date = $1';
         const fecha = new Date();
         //let date = "2022-06-13"
-        let date = String(fecha.getFullYear())+ '-' + String( fecha.getMonth() + 1) + '-' + String(fecha.getDate()-1);
         let client = await db.pool.connect();
-        await client.query(query, [date]).then(res => {client.release();return res.rows;});
+        await client.query(query, [date]).then(res => {client.release();console.log(res.rows);return createMetrics(res.rows)});
     } 
     catch (e) {
         console.log("Error al consultar por los trenes del dia: ", new Date());
@@ -66,37 +65,36 @@ async function createMetrics(listOfDepartures){
         let date = listOfDepartures[0].date
         for (let index = 0; index < listOfDepartures.length; index++) {
             if (listOfDepartures[index].etd == "On time")
-                percentage_ontime = percentage_ontime + 1
-            switch (listOfDepartures[0].crs_destination) {
-                case 'PAD':
-                    quantity_train_to_pad = quantity_train_to_pad + 1
-                    break;
-                case 'ABW':
-                    quantity_train_to_abw = quantity_train_to_abw + 1
-                    break
-                case 'SNF':
-                    quantity_train_to_snf = quantity_train_to_snf + 1
-                    break
+                percentage_ontime = percentage_ontime + 1;
+            let dest = listOfDepartures[index].crs_destination;
+            if (dest=='PAD'){
+                quantity_train_to_pad = quantity_train_to_pad + 1;
+            }
+            else if (dest=='ABW'){
+                quantity_train_to_abw = quantity_train_to_abw + 1;
+            }
+            else if (dest=='SNF'){
+                quantity_train_to_snf = quantity_train_to_snf + 1
             }
         }
         percentage_ontime = percentage_ontime/listOfDepartures.length * 100;
         let client = await db.pool.connect();
-        await client.query(insert_query, [date, percentage_ontime, quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf])
-            .then(res => {client.release();return res;});
+        await client.query(insert_query, [date, Math.floor(percentage_ontime), quantity_train_to_pad, quantity_train_to_abw, quantity_train_to_snf])
+            .then(res => {client.release();return res.rows;});
     } 
     catch (e) {
-        console.log("Error al consultar por los trenes del dia: ", date);
+        console.log("Error al consultar por los trenes del dia");
         throw e;
     } 
 
 }
 
-async function createDataRaw(values){
+async function createDataRaw(value){
     
     try {
-        let query = 'INSERT INTO data(value) VALUES ($1) RETURNING *';
+        let query = 'INSERT INTO data (value) VALUES ($1) RETURNING *';
         let client = await db.pool.connect();
-        await client.query(query, values).then(res => {console.log(res.rows);client.release()});
+        await client.query(query, [value]).then(res => {client.release()});
     } 
     catch (e) {
         await db.pool.query("ROLLBACK");
